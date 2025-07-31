@@ -60,6 +60,13 @@ while True:
 
     max_id = toots[-1]['id']
 
+
+# Add a word filter to mimic my muted words on my timeline
+muted_words = ['trump', 'brexit']
+
+def contains_muted_word(text):
+    return any(word.lower() in text.lower() for word in muted_words)
+
 # We have the toots as raw_timeline but it's best if we strip html
 # We also want to record if a toot is original or was boosted
 filtered_timeline = []
@@ -76,6 +83,9 @@ for toot in raw_timeline:
         boosted = True
     else:
         continue  # Skip if no content at all
+    
+    if contains_muted_word(text):
+        continue # Skip if we detect a muted word
 
     filtered_timeline.append({
         'author': author,
