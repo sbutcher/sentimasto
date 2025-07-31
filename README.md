@@ -37,11 +37,13 @@ Brexit
 ```
 
 Either remove this file or create an empty one to disable muted words.
+
 Otherwise check your own mastodon filters and add them to this file.
 
 ### Access token
 
 In the mastodon UI, click Preferences -> Development -> New Application
+
 Give the application a name (e.g. sentimasto), and allow read access.
 Once done, click on the new app and copy the key from "Your access token" 
 into a text file called `token.txt`.
@@ -66,4 +68,5 @@ You should get a visual result similar to ![this](output.png)
 
 I cannot obtain toots more than a few days old - I think this is due to an 800
 toot limit perhaps. Currently I am collecting daily json files since my timeline is only ~200 toots per day.
+
 Suggestions welcome.
