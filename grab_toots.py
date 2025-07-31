@@ -3,8 +3,22 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import json
 import pytz
+import sys
 
-# Read token from file
+# Get date from command-line argument or default to yesterday
+if len(sys.argv) > 1:
+    try:
+        input_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+    except ValueError:
+        print("Please enter the date in YYYY-MM-DD format.")
+        sys.exit(1)
+else:
+    input_date = datetime.now().date() - timedelta(days=1)
+    print("No date provided. Defaulting to yesterday's date")
+
+print(f"Grabbing toots for {input_date}")
+
+# Read token from file for security reasons
 try:
     with open('token.txt', 'r') as file:
         key_from_file = file.read().strip()
@@ -15,7 +29,7 @@ except Exception as e:
     print(f"Error reading access token: {e}")
     exit(1)
 
-# Authenticate with Mastodon API
+# Authenticate with Mastodon API. Change to your own instance if not the default
 mastodon = Mastodon(
     access_token=key_from_file,
     api_base_url='https://mastodon.social'
@@ -24,9 +38,9 @@ mastodon = Mastodon(
 # Set timezone as desired
 timezone = pytz.timezone('Europe/London')
 
-# Define your target date
-target_date = timezone.localize(datetime(2025, 7, 30))
-next_day = timezone.localize(datetime(2025, 7, 31))
+# Convert date to timezone-aware datetime
+target_date = timezone.localize(datetime.combine(input_date, datetime.min.time()))
+next_day = target_date + timedelta(days=1)
 
 # Fetch and filter timeline
 raw_timeline = []
@@ -77,5 +91,5 @@ with open(filename, 'w', encoding='utf-8') as f:
     json.dump(filtered_timeline, f, indent=2, ensure_ascii=False)
 
 # Tell the user how many toots we processed
-print(f"Saved {len(filtered_timeline)} filtered posts for analysis")
+print(f"Saved {len(filtered_timeline)} filtered posts for analysis. Saved as {filename}")
 
