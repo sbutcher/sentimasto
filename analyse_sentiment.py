@@ -71,7 +71,7 @@ with open("grouped_sentiment_posts.json", "w", encoding="utf-8") as f:
 
 # Draw barplot with hue separation by boosted status
 sns.countplot(data=df, x="sentiment", hue="boosted_label", palette="Set2")
-plt.title(f"Sentiment Distribution from {start_date} to {end_date}")
+plt.title(f"Sentiment Distribution from {start_date} to {end_date} - muting applied")
 plt.xlabel("Sentiment Category")
 plt.ylabel("Number of Posts")
 plt.legend(title="Boosted Status")

@@ -45,6 +45,8 @@ next_day = target_date + timedelta(days=1)
 # Fetch and filter timeline
 raw_timeline = []
 max_id = None
+skipped_count=0
+skipped_authors = []
 
 while True:
     toots = mastodon.timeline_home(max_id=max_id, limit=40)
@@ -62,10 +64,17 @@ while True:
 
 
 # Add a word filter to mimic my muted words on my timeline
-muted_words = ['trump', 'brexit']
+#muted_words = ['trump', 'brexit']
+try:
+    with open('muted_words.txt', 'r', encoding='utf-8') as f:
+        muted_words = [line.strip().lower() for line in f if line.strip()]
+except FileNotFoundError:
+    print("Warning: muted_words.txt not found. No word filtering will be applied.")
+    muted_words = []
 
-def contains_muted_word(text):
-    return any(word.lower() in text.lower() for word in muted_words)
+def contains_muted_word(text, muted_words):
+    return any(word in text.lower() for word in muted_words)
+
 
 # We have the toots as raw_timeline but it's best if we strip html
 # We also want to record if a toot is original or was boosted
@@ -84,7 +93,9 @@ for toot in raw_timeline:
     else:
         continue  # Skip if no content at all
     
-    if contains_muted_word(text):
+    if contains_muted_word(text,muted_words):
+        skipped_count +=1
+        skipped_authors.append(author)
         continue # Skip if we detect a muted word
 
     filtered_timeline.append({
@@ -93,6 +104,9 @@ for toot in raw_timeline:
         'boosted': boosted
     })
 
+
+
+
 # Save simplified data as json 
 # This file contains author, toot content, and whether the toot was boosted or not
 clean_date = target_date.strftime("%Y-%m-%d")
@@ -100,6 +114,14 @@ filename = f"mastodon_filtered_{clean_date}.json"
 with open(filename, 'w', encoding='utf-8') as f:
     json.dump(filtered_timeline, f, indent=2, ensure_ascii=False)
 
+
+skipped_file = f"mastodon_skipped_authors_{clean_date}.txt"
+with open(skipped_file, 'w', encoding='utf-8') as f:
+    for author in skipped_authors:
+        f.write(f"{author}\n")
+
+print(f"Logged {skipped_count} skipped authors to {skipped_file}")
+
 # Tell the user how many toots we processed
-print(f"Saved {len(filtered_timeline)} filtered posts for analysis. Saved as {filename}")
+print(f"Saved {len(filtered_timeline)} filtered posts for analysis. Skipped {skipped_count}. Saved file as: {filename}")
 
