@@ -55,4 +55,4 @@ Then run the sentiment analysis for a given date range that we have obtained jso
 python analyse_sentiment.py 2025-07-27 2025-07-31
 ```
 
-You should get a visual result similar to [this](output.png)
+You should get a visual result similar to ![this](output.png)
