@@ -28,11 +28,16 @@ pip install -r requirements.txt
 
 ### Muted words
 
-Create a muted_words.txt file with terms you'd like to exclude. Example:
+Create a muted_words.txt file with terms you'd like to exclude. An example has
+been provided containing the words:
+
 ```
 Trump
 Brexit
 ```
+
+Either remove this file or create an empty one to disable muted words.
+Otherwise check your own mastodon filters and add them to this file.
 
 ### Access token
 
@@ -56,3 +61,9 @@ python analyse_sentiment.py 2025-07-27 2025-07-31
 ```
 
 You should get a visual result similar to ![this](output.png)
+
+## Issues
+
+I cannot obtain toots more than a few days old - I think this is due to an 800
+toot limit perhaps. Currently I am collecting daily json files since my timeline is only ~200 toots per day.
+Suggestions welcome.
