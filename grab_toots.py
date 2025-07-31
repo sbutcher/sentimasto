@@ -25,8 +25,8 @@ mastodon = Mastodon(
 timezone = pytz.timezone('Europe/London')
 
 # Define your target date
-target_date = timezone.localize(datetime(2025, 7, 1))
-next_day = timezone.localize(datetime(2025, 7, 29))
+target_date = timezone.localize(datetime(2025, 7, 30))
+next_day = timezone.localize(datetime(2025, 7, 31))
 
 # Fetch and filter timeline
 raw_timeline = []
