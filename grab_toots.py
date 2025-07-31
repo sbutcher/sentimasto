@@ -64,7 +64,7 @@ while True:
 
 
 # Add a word filter to mimic my muted words on my timeline
-#muted_words = ['trump', 'brexit']
+# 
 try:
     with open('muted_words.txt', 'r', encoding='utf-8') as f:
         muted_words = [line.strip().lower() for line in f if line.strip()]
